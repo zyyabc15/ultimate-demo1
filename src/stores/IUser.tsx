@@ -1,32 +1,30 @@
-export interface IRules {
-  pattern: any;
+export interface Irules {
+  pattern: ((value: string | number) => boolean) | RegExp;
   error: string;
 }
-export interface IFileContent {
-  defaultValue: number | string;
-  rules: [IRules];
+export interface IfileContent {
+  value: number | string;
+  rules: [Irules];
 }
-export interface IFields {
-  name: IFileContent;
-  age: IFileContent;
-  gender: IFileContent;
+export interface Ifields {
+  name: IfileContent;
+  age: IfileContent;
+  gender: IfileContent;
 }
-interface IInnerform {
-  value: string | number;
-  error: string;
+export interface Iform {
+  name: IfileState;
+  age: IfileState;
+  gender: IfileState;
 }
-export interface IForm {
-  name: IInnerform;
-  age: IInnerform;
-  gender: IInnerform;
-}
-export interface IState {
-  form: IForm;
+export interface Istate {
+  form: Iform;
   formValid: boolean;
 }
-export interface fileState {
+export interface IfileState {
   valid: boolean;
   value: string | number;
   error: string;
 }
-export interface IUserAddProps extends IState {}
+export interface IuserAddProps extends Istate {
+  onFormChange: (value: string) => void;
+}

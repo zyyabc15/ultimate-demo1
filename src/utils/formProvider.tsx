@@ -1,18 +1,21 @@
-import * as React from "react";
-import * as IUser from "../stores/IUser";
+import * as React from 'react';
+import * as IUser from '../stores/IUser';
 
-const formProvider = (fields: IUser.IFields): any => {
+const formProvider = (fields: IUser.Ifields): any => {
   return (Comp: any) => {
-    const initialFormState: IUser.IForm = {};
-    (fields as any).map((v: IUser.IFileContent, key: string) => {
-      initialFormState[key] = {
-        value: v.defaultValue,
-        error: ""
-      };
-    });
+    const initialFormState: any = {};
+    for (let key in fields) {
+      if (fields[key]) {
+        initialFormState[key] = {
+          value: fields[key],
+          error: ''
+        };
+      }
 
-    class FormComponent extends React.Component<any, IUser.IState> {
-      public state: IUser.IState;
+    }
+console.log(initialFormState,1111);
+    class FormComponent extends React.Component<any, IUser.Istate> {
+      public state: IUser.Istate;
       constructor() {
         super();
         this.state = {
@@ -23,29 +26,29 @@ const formProvider = (fields: IUser.IFields): any => {
       }
       handleValueChange(fieldName: string, value: string | number): void {
         const { form } = this.state;
-        const newFieldState: IUser.fileState = { value, valid: true, error: "" };
-        const fieldRules: IUser.IRules[] = fields[fieldName].rules;
+        const newFieldState: IUser.IfileState = { value, valid: true, error: '' };
+        const fieldRules: IUser.Irules[] = fields[fieldName].rules;
 
-        fieldRules.every((v:IUser.IRules,index:number):boolean=>{
-            const { pattern, error } = v;
-            let valid = false;
-            if (typeof pattern === "function") {
-              valid = pattern(value);
-            } else {
-              valid = pattern.test(value);
-            }
-            if (!valid) {
-              newFieldState.valid = false;
-              newFieldState.error = error;
-              return false;
-            }
-            return true;
-        })
-        
-        const newForm: IUser.IForm = { ...form, [fieldName]: newFieldState };
+        fieldRules.every((v: IUser.Irules, index: number): boolean => {
+          const { pattern, error } = v;
+          let valid = false;
+          if (typeof pattern === 'function') {
+            valid = pattern(value);
+          } else {
+            valid = pattern.test(value + '');
+          }
+          if (!valid) {
+            newFieldState.valid = false;
+            newFieldState.error = error;
+            return false;
+          }
+          return true;
+        });
+
+        const newForm: IUser.Iform = { ...form, [fieldName]: newFieldState };
         const formValid: boolean = (Object as any)
           .values(newForm)
-          .every((f: IUser.fileState) => f.valid);
+          .every((f: IUser.IfileState) => f.valid);
         this.setState({
           form: newForm,
           formValid
@@ -55,8 +58,7 @@ const formProvider = (fields: IUser.IFields): any => {
         const { form, formValid } = this.state;
         return (
           <Comp
-            {...this.props}
-            from={form}
+            form={form}
             formValid={formValid}
             onFormChange={this.handleValueChange}
           />
