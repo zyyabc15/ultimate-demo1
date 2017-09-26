@@ -7,13 +7,11 @@ const formProvider = (fields: IUser.Ifields): any => {
     for (let key in fields) {
       if (fields[key]) {
         initialFormState[key] = {
-          value: fields[key],
+          value: fields[key].value,
           error: ''
         };
       }
-
     }
-console.log(initialFormState,1111);
     class FormComponent extends React.Component<any, IUser.Istate> {
       public state: IUser.Istate;
       constructor() {
@@ -51,13 +49,14 @@ console.log(initialFormState,1111);
           .every((f: IUser.IfileState) => f.valid);
         this.setState({
           form: newForm,
-          formValid
+          formValid: formValid
         });
       }
       render() {
         const { form, formValid } = this.state;
         return (
           <Comp
+            {...this.props}
             form={form}
             formValid={formValid}
             onFormChange={this.handleValueChange}
